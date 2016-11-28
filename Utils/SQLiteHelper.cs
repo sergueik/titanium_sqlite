@@ -21,7 +21,6 @@ namespace SQLite.Utils {
         }
 
         #region DB Info
-
         public DataTable GetTableStatus() {
             return Select("SELECT * FROM sqlite_master;");
         }
@@ -45,11 +44,9 @@ namespace SQLite.Utils {
         public DataTable ShowDatabase() {
             return Select("PRAGMA database_list;");
         }
-
         #endregion
 
         #region Query
-
         public void BeginTransaction() {
             cmd.CommandText = "begin transaction;";
             cmd.ExecuteNonQuery();

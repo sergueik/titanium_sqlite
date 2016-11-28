@@ -22,7 +22,7 @@ namespace WebTester {
         private string database;
         private string dataSource;
 
-		#region Event handlers
+		#region Event Handlers
         public async Task OnRequest(object sender, SessionEventArgs e) {
         	Console.WriteLine(e.WebSession.Request.Url);
         	var requestHeaders = e.WebSession.Request.RequestHeaders;
@@ -67,8 +67,7 @@ namespace WebTester {
             return Task.FromResult(0);
         }
         #endregion
-
-        #region DB Methods
+        #region DB Helpers
         bool TestConnection() {
             Console.WriteLine(String.Format("Testing database connection {0}...", database));
             try  {
@@ -127,8 +126,8 @@ namespace WebTester {
             database = String.Format("{0}\\data.db", dataFolderPath);
             dataSource = "data source=" + database;
             tableName = "product";
-            #region Attach Event handlers            
             proxyServer = new ProxyServer();
+            #region Attach Event handlers            
             proxyServer.TrustRootCertificate = true;
             proxyServer.BeforeRequest += OnRequest;
             proxyServer.BeforeResponse += OnResponse;
@@ -150,19 +149,6 @@ namespace WebTester {
 			proxyServer.Start();			
             // Wait  for the user to stop
             Console.WriteLine("Hit CTRL+C to end session.");
-        }
-
-        private int getAvailablePort() {
-            try {
-                Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                sock.Bind(new IPEndPoint(IPAddress.Any, 0));
-                int port = ((IPEndPoint)sock.LocalEndPoint).Port;
-                sock.Dispose();
-                return port;
-            } catch (Exception ex) {
-                Console.Error.WriteLine(ex.Message);
-                return 0;
-            }
         }
 
         public void Stop() {
