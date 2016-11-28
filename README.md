@@ -3,7 +3,7 @@ This project is a replica of the [basic example](https://github.com/justcoding12
 combined with [SQLite Helper](http://sh.codeplex.com) for logging the results for performance analysis.
 
 ### Reference
-[Tanium](https://github.com/justcoding121/Titanium-Web-Proxy) - a leightweight web proxy FiddlerCore alternative.
+[Titanium](https://github.com/justcoding121/Titanium-Web-Proxy) - a leightweight web proxy FiddlerCore alternative.
 
 ### Author
 [Serguei Kouzmine](kouzmine_serguei@yahoo.com)

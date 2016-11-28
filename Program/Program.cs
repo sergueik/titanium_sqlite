@@ -21,7 +21,8 @@ namespace WebTester {
         private string dataFolderPath;
         private string database;
         private string dataSource;
-
+		private Dictionary<Guid, string> requestBodyHistory;
+		
 		#region Event Handlers
         public async Task OnRequest(object sender, SessionEventArgs e) {
         	Console.WriteLine(e.WebSession.Request.Url);
@@ -127,32 +128,54 @@ namespace WebTester {
             dataSource = "data source=" + database;
             tableName = "product";
             proxyServer = new ProxyServer();
+            proxyServer.TrustRootCertificate = true;
+            requestBodyHistory = new Dictionary<Guid, string>();
+        }
+
+        public void Start() {
+            Console.WriteLine("Starting Titanium.");
+            dataFolderPath = Directory.GetCurrentDirectory();
+            database = String.Format("{0}\\titanium-data.db", dataFolderPath);
+            dataSource = "data source=" + database;
+            tableName = "product";
+
+            TestConnection();
+            createTable();
             #region Attach Event handlers            
             proxyServer.TrustRootCertificate = true;
             proxyServer.BeforeRequest += OnRequest;
             proxyServer.BeforeResponse += OnResponse;
             proxyServer.ServerCertificateValidationCallback += OnCertificateValidation;
             proxyServer.ClientCertificateSelectionCallback += OnCertificateSelection;
-	        #endregion
-        }
+            #endregion
+            try {
+                ExplicitProxyEndPoint endPoint = new ExplicitProxyEndPoint(IPAddress.Any, 80, false);
+                proxyServer.AddEndPoint(endPoint);
+                    Console.WriteLine("Listening on '{0}' endpoint at Ip {1} and port: {2} ",
+                       endPoint.GetType().Name, endPoint.IpAddress, endPoint.Port);
+                } catch (Exception e) {
+                    Console.WriteLine("Exception: " + e.ToString());
+                // An attempt was made to access a socket in a way forbidden by its access permissions
+            }
+            try
+            {
+                ExplicitProxyEndPoint endPoint = new ExplicitProxyEndPoint(IPAddress.Any, 443, false);
+                proxyServer.AddEndPoint(endPoint);
+                Console.WriteLine("Listening on '{0}' endpoint at Ip {1} and port: {2} ",
+                   endPoint.GetType().Name, endPoint.IpAddress, endPoint.Port);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.ToString());
+                // Cannot set endPoints not added to proxy as system proxy
+            }
+            proxyServer.Start();
+            // proxyServer.SetAsSystemHttpProxy(endPoint);
 
-        public void Start() {
-            Console.WriteLine("Starting Titanium.");
-            dataFolderPath = Directory.GetCurrentDirectory();
-            database = String.Format("{0}\\fiddler-data.db", dataFolderPath);
-            dataSource = "data source=" + database;
-            tableName = "product";
-
-            TestConnection();
-            createTable();
-            int open_port = getAvailablePort();
-			proxyServer.Start();			
-            // Wait  for the user to stop
-            Console.WriteLine("Hit CTRL+C to end session.");
         }
 
         public void Stop() {
-            Console.WriteLine("Shut down Titanium proxy server.");
+            Console.WriteLine("Stop down Titanium proxy server.");
             proxyServer.BeforeRequest -= OnRequest;
             proxyServer.BeforeResponse -= OnResponse;
             proxyServer.ServerCertificateValidationCallback -= OnCertificateValidation;
@@ -167,6 +190,8 @@ namespace WebTester {
             Console.CancelKeyPress += new ConsoleCancelEventHandler(Console_CancelKeyPress);
             #endregion
             proxy.Start();
+            // Wait  for the user to stop
+            Console.WriteLine("Hit CTRL+C to end session.");
             Object forever = new Object();
             lock (forever) {
                 System.Threading.Monitor.Wait(forever);
