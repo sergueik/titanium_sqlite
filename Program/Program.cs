@@ -175,7 +175,7 @@ namespace WebTester {
         }
 
         public void Stop() {
-            Console.WriteLine("Stop down Titanium proxy server.");
+            Console.WriteLine("Shut down Titanium proxy server.");
             proxyServer.BeforeRequest -= OnRequest;
             proxyServer.BeforeResponse -= OnResponse;
             proxyServer.ServerCertificateValidationCallback -= OnCertificateValidation;
