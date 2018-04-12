@@ -75,7 +75,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Titanium.Web.Proxy">
-      <HintPath>..\packages\Titanium.Web.Proxy.3.0.8\lib\net45\Titanium.Web.Proxy.dll</HintPath>
+      <HintPath>..\packages\Titanium.Web.Proxy.3.0.27\lib\net45\Titanium.Web.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="WebDriver">
       <HintPath>..\packages\Selenium.WebDriver.3.8.0\lib\net45\WebDriver.dll</HintPath>
