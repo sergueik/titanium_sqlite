@@ -54,7 +54,7 @@ namespace WebTester
 			var responseHeaders = e.WebSession.Response.ResponseHeaders;
 			Console.WriteLine(String.Format("PID: {0}", e.WebSession.ProcessId.Value));
 			if (e.WebSession.Request.Method == "GET" || e.WebSession.Request.Method == "POST") {
-				if (e.WebSession.Response.ResponseStatusCode == "200") {
+				if (e.WebSession.Response.ResponseStatusCode.ToString() == "200") {
 					if (e.WebSession.Response.ContentType != null && e.WebSession.Response.ContentType.Trim().ToLower().Contains("text/html")) {
 						byte[] bodyBytes = await e.GetResponseBody();
 						await e.SetResponseBody(bodyBytes);
@@ -166,6 +166,8 @@ namespace WebTester
 			proxyServer.ClientCertificateSelectionCallback += OnCertificateSelection;
 			#endregion
 			ExplicitProxyEndPoint explicitHTTPEndPoint = null;
+			#pragma warning disable 0219
+			#pragma warning disable 0414
 			ExplicitProxyEndPoint explicitHTTPSEndPoint = null;
 			try {
 				explicitHTTPEndPoint = new ExplicitProxyEndPoint(IPAddress.Any, 80, false);
